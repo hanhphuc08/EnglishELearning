@@ -1,4 +1,4 @@
-package com.example.englishelearning;
+package com.example.englishelearning.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.example.englishelearning.listening.ListeningActivity;
+import com.example.englishelearning.R;
 
 public class HomeFragment extends Fragment {
     @Override

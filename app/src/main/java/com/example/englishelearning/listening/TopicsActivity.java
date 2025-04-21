@@ -1,21 +1,17 @@
-package com.example.englishelearning;
+package com.example.englishelearning.listening;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.englishelearning.R;
 import com.example.englishelearning.adapter.TopicAdapter;
 import com.example.englishelearning.model.Topic;
 import com.google.firebase.database.DataSnapshot;

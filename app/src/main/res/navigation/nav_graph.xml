@@ -6,22 +6,22 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.englishelearning.HomeFragment"
+        android:name="com.example.englishelearning.fragment.HomeFragment"
         android:label="Home" />
 
     <fragment
         android:id="@+id/navigation_bookmark"
-        android:name="com.example.englishelearning.SavedFragment"
+        android:name="com.example.englishelearning.fragment.SavedFragment"
         android:label="Saved" />
 
     <fragment
         android:id="@+id/navigation_play"
-        android:name="com.example.englishelearning.PracticeFragment"
+        android:name="com.example.englishelearning.fragment.PracticeFragment"
         android:label="Practice" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.englishelearning.ProfileFragment"
+        android:name="com.example.englishelearning.fragment.ProfileFragment"
         android:label="Profile" />
 
 </navigation> 

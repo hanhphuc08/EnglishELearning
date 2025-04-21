@@ -19,13 +19,13 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ExerciseActivity"
+            android:name=".listening.ExerciseActivity"
             android:exported="false" />
         <activity
-            android:name=".TopicsActivity"
+            android:name=".listening.TopicsActivity"
             android:exported="false" />
         <activity
-            android:name=".ListeningActivity"
+            android:name=".listening.ListeningActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
