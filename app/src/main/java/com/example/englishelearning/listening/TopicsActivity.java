@@ -51,7 +51,7 @@ public class TopicsActivity extends AppCompatActivity {
         topicsTitle.setText("Topics for Level " + level);
         topicsRecyclerView = findViewById(R.id.topicsRecyclerView);
         topicsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TopicAdapter(topicList,this::startExerciseActivity);
+        adapter = new TopicAdapter(topicList,this::startExerciseActivity, level);
         topicsRecyclerView.setAdapter(adapter);
 
         mDatabase.child(level).child("topics").addValueEventListener(new ValueEventListener() {

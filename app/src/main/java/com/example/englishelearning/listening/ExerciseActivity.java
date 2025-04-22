@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.englishelearning.LoginActivity;
@@ -20,8 +21,11 @@ import com.example.englishelearning.model.Question;
 import com.example.englishelearning.model.Topic;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +53,7 @@ public class ExerciseActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
-        // Check if user is logged in
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, "Please log in to continue", Toast.LENGTH_LONG).show();
@@ -133,17 +137,85 @@ public class ExerciseActivity extends AppCompatActivity {
                 }
             }
 
-            // Calculate and save progress
-            int progress = (correctCount * 100) / topic.questions.size();
+            final int finalCorrectCount = correctCount;
+            int topicProgress = (correctCount * 100) / topic.questions.size();
             String userId = currentUser.getUid();
-            mDatabase.child(userId).child("progress").child("listening").child(level)
-                    .setValue(progress)
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(this, "Score: " + progress + "%", Toast.LENGTH_LONG).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error saving progress", Toast.LENGTH_LONG).show());
+            DatabaseReference topicRef = mDatabase.child(userId).child("progress").child("listening")
+                    .child(level).child("topics").child(String.valueOf(topic.id));
+            topicRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Long previousProgress = dataSnapshot.getValue(Long.class);
+                    if (previousProgress == null || topicProgress > previousProgress) {
+                        topicRef.setValue(topicProgress)
+                                .addOnSuccessListener(aVoid -> {
+                                    updateLevelProgress(userId);
+                                    Intent intent = new Intent(ExerciseActivity.this, ResultActivity.class);
+                                    intent.putExtra("CORRECT_COUNT", finalCorrectCount);
+                                    intent.putExtra("TOTAL_QUESTIONS", topic.questions.size());
+                                    intent.putExtra("TOPIC_PROGRESS", topicProgress);
+                                    intent.putExtra("LEVEL", level);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(ExerciseActivity.this,
+                                        "Error saving topic progress: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                    } else {
+                        updateLevelProgress(userId);
+                        Intent intent = new Intent(ExerciseActivity.this, ResultActivity.class);
+                        intent.putExtra("CORRECT_COUNT", finalCorrectCount);
+                        intent.putExtra("TOTAL_QUESTIONS", topic.questions.size());
+                        intent.putExtra("TOPIC_PROGRESS", topicProgress);
+                        intent.putExtra("LEVEL", level);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
 
-            finish();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(ExerciseActivity.this, "Error checking topic progress: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            Toast.makeText(this, "Topic Score: " + topicProgress + "%", Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private void updateLevelProgress(String userId) {
+        DatabaseReference topicsRef = mDatabase.child(userId).child("progress").child("listening")
+                .child(level).child("topics");
+        topicsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    android.util.Log.w("ExerciseActivity", "No topics found for level " + level);
+                    return;
+                }
+                long totalProgress = 0;
+                int topicCount = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Long progress = snapshot.getValue(Long.class);
+                    if (progress != null) {
+                        totalProgress += progress;
+                        topicCount++;
+                    } else {
+                        android.util.Log.w("ExerciseActivity", "Invalid progress for topic " + snapshot.getKey());
+                    }
+                }
+                if(topicCount > 0){
+                    long levelProgress = totalProgress / topicCount;
+                    mDatabase.child(userId).child("progress").child("listening").child(level)
+                            .child("levelProgress").setValue(levelProgress)
+                            .addOnSuccessListener(aVoid -> android.util.Log.d("ExerciseActivity", "Level progress updated: " + levelProgress))
+                            .addOnFailureListener(e -> Toast.makeText(ExerciseActivity.this,
+                                    "Error saving level progress", Toast.LENGTH_LONG).show());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ExerciseActivity.this, "Error updating level progress: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
     }
 

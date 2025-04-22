@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -18,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$PROJECT_DIR$/../Moi%20truong/icons/material/materialicons/arrow_back/baseline_arrow_back_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../Moi%20truong/icons/material/materialicons/play_circle_filled/baseline_play_circle_filled_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +33,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_back" />
+                            <entry key="outputName" value="ic_topic" />
                             <entry key="sourceFile" value="D:\LaptrinhMobile\EnglishELearning" />
                           </map>
                         </option>

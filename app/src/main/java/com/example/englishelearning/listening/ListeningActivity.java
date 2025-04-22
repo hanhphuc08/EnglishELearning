@@ -10,6 +10,7 @@
     import androidx.annotation.NonNull;
     import androidx.appcompat.app.AppCompatActivity;
 
+    import com.example.englishelearning.LoginActivity;
     import com.example.englishelearning.R;
     import com.google.firebase.auth.FirebaseAuth;
     import com.google.firebase.auth.FirebaseUser;
@@ -36,7 +37,7 @@
                 mAuth = FirebaseAuth.getInstance();
                 mDatabase = FirebaseDatabase.getInstance().getReference("users");
             } catch (IllegalStateException e) {
-                // Handle case where Firebase is not initialized
+
                 Toast.makeText(this, "Firebase initialization failed", Toast.LENGTH_LONG).show();
                 finish();
                 return;
@@ -62,29 +63,22 @@
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Long a1Progress = dataSnapshot.child("A1").getValue(Long.class);
-                                Long a2Progress = dataSnapshot.child("A2").getValue(Long.class);
-                                Long b1Progress = dataSnapshot.child("B1").getValue(Long.class);
-                                Long b2Progress = dataSnapshot.child("B2").getValue(Long.class);
-                                Long c1Progress = dataSnapshot.child("C1").getValue(Long.class);
-
-                                progressA1.setText("A1: " + (a1Progress != null ? a1Progress : 0) + "%");
-                                progressA2.setText("A2: " + (a2Progress != null ? a2Progress : 0) + "%");
-                                progressB1.setText("B1: " + (b1Progress != null ? b1Progress : 0) + "%");
-                                progressB2.setText("B2: " + (b2Progress != null ? b2Progress : 0) + "%");
-                                progressC1.setText("C1: " + (c1Progress != null ? c1Progress : 0) + "%");
-
-                                progressA1Card.setText("Progress: " + (a1Progress != null ? a1Progress : 0) + "%");
-                                progressA2Card.setText("Progress: " + (a2Progress != null ? a2Progress : 0) + "%");
-                                progressB1Card.setText("Progress: " + (b1Progress != null ? b1Progress : 0) + "%");
-                                progressB2Card.setText("Progress: " + (b2Progress != null ? b2Progress : 0) + "%");
-                                progressC1Card.setText("Progress: " + (c1Progress != null ? c1Progress : 0) + "%");
+                                updateProgress(dataSnapshot, "A1", progressA1, progressA1Card);
+                                updateProgress(dataSnapshot, "A2", progressA2, progressA2Card);
+                                updateProgress(dataSnapshot, "B1", progressB1, progressB1Card);
+                                updateProgress(dataSnapshot, "B2", progressB2, progressB2Card);
+                                updateProgress(dataSnapshot, "C1", progressC1, progressC1Card);
                             }
 
                             @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(ListeningActivity.this, "Error loading progress: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
+            } else{
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
             }
             findViewById(R.id.cardA1).setOnClickListener(v -> startTopicsActivity("A1"));
             findViewById(R.id.cardA2).setOnClickListener(v -> startTopicsActivity("A2"));
@@ -93,6 +87,40 @@
             findViewById(R.id.cardC1).setOnClickListener(v -> startTopicsActivity("C1"));
 
             }
+        private void updateProgress(DataSnapshot dataSnapshot, String level, TextView progressText, TextView progressCard){
+            DataSnapshot levelSnapshot = dataSnapshot.child(level).child("levelProgress");
+            Long progress = null;
+            if (levelSnapshot.exists()) {
+                try {
+                    progress = levelSnapshot.getValue(Long.class);
+                } catch (Exception e) {
+                    android.util.Log.e("ListeningActivity", "Error reading progress for " + level + ": " + e.getMessage());
+                }
+            } else{
+                DataSnapshot topicsSnapshot = dataSnapshot.child(level).child("topics");
+                if (topicsSnapshot.exists()) {
+                    long totalProgress = 0;
+                    int topicCount = 0;
+                    for (DataSnapshot topicSnapshot : topicsSnapshot.getChildren()) {
+                        Long topicProgress = topicSnapshot.getValue(Long.class);
+                        if (topicProgress != null) {
+                            totalProgress += topicProgress;
+                            topicCount++;
+                        }
+                    }
+                    if (topicCount > 0) {
+                        progress = totalProgress / topicCount;
+                        mDatabase.child(mAuth.getCurrentUser().getUid()).child("progress")
+                                .child("listening").child(level).child("levelProgress")
+                                .setValue(progress);
+                    }
+                }
+            }
+            long finalProgress = progress != null ? progress : 0;
+            progressText.setText(level + ": " + finalProgress + "%");
+            progressCard.setText("Progress: " + finalProgress + "%");
+
+        }
         private void startTopicsActivity(String level) {
             Intent intent = new Intent(this, TopicsActivity.class);
             intent.putExtra("LEVEL", level);
