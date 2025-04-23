@@ -16,6 +16,16 @@
         android:theme="@style/Theme.EnglishELearning"
         tools:targetApi="31">
         <activity
+            android:name=".grammar.GrammarLevelActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".grammar.GrammarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".grammar.GrammarQuestionActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity

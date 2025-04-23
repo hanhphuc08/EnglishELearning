@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.englishelearning.grammar.GrammarActivity;
 import com.example.englishelearning.listening.ListeningActivity;
 import com.example.englishelearning.R;
 
@@ -25,6 +26,11 @@ public class HomeFragment extends Fragment {
         // Set click listener for Listening card
         view.findViewById(R.id.listeningCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
+            startActivity(intent);
+        });
+        // Grammar Card
+        view.findViewById(R.id.grammarCard).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), GrammarActivity.class);
             startActivity(intent);
         });
     }
