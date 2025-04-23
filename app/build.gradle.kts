@@ -10,11 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.example.englishelearning"
-        minSdk = 31
+        minSdk = 27
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -59,7 +58,7 @@ dependencies {
     implementation ("com.github.TutorialsAndroid:GButton:v1.0.19")
 
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
+    implementation ("androidx.lifecycle:lifecycle-runtime:2.2.0")
     implementation ("com.google.firebase:firebase-database:20.3.1")
     implementation ("com.google.firebase:firebase-auth:23.0.0")
     implementation ("com.google.firebase:firebase-storage:20.3.0")
