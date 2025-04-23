@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.englishelearning.listening.ListeningActivity;
 import com.example.englishelearning.R;
+import com.example.englishelearning.speaking.SpeakingActivity;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -25,6 +26,11 @@ public class HomeFragment extends Fragment {
         // Set click listener for Listening card
         view.findViewById(R.id.listeningCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
+            startActivity(intent);
+        });
+
+        view.findViewById(R.id.speakingCard).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SpeakingActivity.class);
             startActivity(intent);
         });
     }

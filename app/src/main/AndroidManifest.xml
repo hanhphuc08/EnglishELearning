@@ -16,6 +16,15 @@
         android:theme="@style/Theme.EnglishELearning"
         tools:targetApi="31">
         <activity
+            android:name=".speaking.ExerciseSpeakingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".speaking.TopicsSpeakingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".speaking.SpeakingActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
