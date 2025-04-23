@@ -29,16 +29,17 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
             startActivity(intent);
         });
-<<<<<<< HEAD
+
         // Grammar Card
         view.findViewById(R.id.grammarCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), GrammarActivity.class);
-=======
+            startActivity(intent);
+        });
 
         view.findViewById(R.id.speakingCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SpeakingActivity.class);
->>>>>>> speaking
+
             startActivity(intent);
         });
+        }
     }
-} 
