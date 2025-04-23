@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.englishelearning.grammar.GrammarActivity;
 import com.example.englishelearning.listening.ListeningActivity;
 import com.example.englishelearning.R;
+import com.example.englishelearning.speaking.SpeakingActivity;
 
 public class HomeFragment extends Fragment {
     @Override
@@ -28,9 +29,15 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
             startActivity(intent);
         });
+<<<<<<< HEAD
         // Grammar Card
         view.findViewById(R.id.grammarCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), GrammarActivity.class);
+=======
+
+        view.findViewById(R.id.speakingCard).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SpeakingActivity.class);
+>>>>>>> speaking
             startActivity(intent);
         });
     }

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "36605536124",
+    "firebase_url": "https://englishelearning-42afb-default-rtdb.firebaseio.com",
+    "project_id": "englishelearning-42afb",
+    "storage_bucket": "englishelearning-42afb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36605536124:android:226bb20870d1e172ad66f9",
+        "android_client_info": {
+          "package_name": "com.example.englishelearning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYrsL17f7RKRyGnNUklh8f1wmXce77XEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
