@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".MyApplication"
@@ -20,6 +21,27 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
+<<<<<<< HEAD
+=======
+            android:exported="false" />
+        <activity
+            android:name=".ExerciseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TopicsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ListeningActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vocabulary.VocabularyLevelActivity"
+            android:exported="false" />
+        <activity android:name=".vocabulary.VocabularyWordActivity" />
+        <activity android:name=".vocabulary.VocabularyWordCardActivity" />
+
+        <activity
+            android:name=".MainActivity"
+>>>>>>> vocabulary
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

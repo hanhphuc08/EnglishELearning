@@ -9,10 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+<<<<<<< HEAD:app/src/main/java/com/example/englishelearning/fragment/HomeFragment.java
 import com.example.englishelearning.grammar.GrammarActivity;
 import com.example.englishelearning.listening.ListeningActivity;
 import com.example.englishelearning.R;
 import com.example.englishelearning.speaking.SpeakingActivity;
+=======
+import com.example.englishelearning.vocabulary.VocabularyLevelActivity;
+>>>>>>> vocabulary:app/src/main/java/com/example/englishelearning/HomeFragment.java
 
 public class HomeFragment extends Fragment {
     @Override
@@ -29,6 +33,7 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
             startActivity(intent);
         });
+<<<<<<< HEAD:app/src/main/java/com/example/englishelearning/fragment/HomeFragment.java
 
         // Grammar Card
         view.findViewById(R.id.grammarCard).setOnClickListener(v -> {
@@ -42,4 +47,10 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
         }
+=======
+        view.findViewById(R.id.vocabularyCard).setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), VocabularyLevelActivity.class);
+            startActivity(intent);
+        });
+>>>>>>> vocabulary:app/src/main/java/com/example/englishelearning/HomeFragment.java
     }
