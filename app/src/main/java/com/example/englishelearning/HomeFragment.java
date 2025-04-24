@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.englishelearning.vocabulary.VocabularyLevelActivity;
+
 public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,6 +24,10 @@ public class HomeFragment extends Fragment {
         // Set click listener for Listening card
         view.findViewById(R.id.listeningCard).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ListeningActivity.class);
+            startActivity(intent);
+        });
+        view.findViewById(R.id.vocabularyCard).setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), VocabularyLevelActivity.class);
             startActivity(intent);
         });
     }
