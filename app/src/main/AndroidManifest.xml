@@ -16,6 +16,9 @@
         android:theme="@style/Theme.EnglishELearning"
         tools:targetApi="31">
         <activity
+            android:name=".speaking.TestSpeakingActivity"
+            android:exported="false" />
+        <activity
             android:name=".listening.ResultActivity"
             android:exported="false" />
         <activity
@@ -38,26 +41,25 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"></activity>
         <activity
             android:name=".grammar.GrammarActivity"
             android:exported="false" />
-        <activity android:name=".grammar.GrammarLevelActivity"
-            android:exported="false"/>
-        <activity android:name=".grammar.GrammarQuestionActivity"
-            android:exported="false"/>
-
-
-        <activity android:name=".speaking.ExerciseSpeakingActivity"
-            android:exported="false">
-        </activity>
-        <activity android:name=".speaking.TopicsSpeakingActivity"
-            android:exported="false"/>
-        <activity android:name=".speaking.SpeakingActivity"
-            android:exported="false"/>
-
+        <activity
+            android:name=".grammar.GrammarLevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".grammar.GrammarQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".speaking.ExerciseSpeakingActivity"
+            android:exported="false"></activity>
+        <activity
+            android:name=".speaking.TopicsSpeakingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".speaking.SpeakingActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
