@@ -22,6 +22,9 @@
             android:name=".listening.ResultActivity"
             android:exported="false" />
         <activity
+            android:name=".speaking.ResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
