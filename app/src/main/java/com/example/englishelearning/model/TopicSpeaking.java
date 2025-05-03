@@ -8,6 +8,7 @@ public class TopicSpeaking implements Serializable {
     public String title;
     public String video;
     public String transcript;
+    public int progress;
 
     public List<String> key_phrases;
 
@@ -49,5 +50,13 @@ public class TopicSpeaking implements Serializable {
 
     public void setKeyPhrases(List<String> key_phrases) {
         this.key_phrases = key_phrases;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }

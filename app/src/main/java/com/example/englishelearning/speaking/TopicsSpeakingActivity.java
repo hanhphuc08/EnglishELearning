@@ -2,6 +2,7 @@ package com.example.englishelearning.speaking;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.englishelearning.R;
 import com.example.englishelearning.adapter.TopicSpeakingAdapter;
 import com.example.englishelearning.model.TopicSpeaking;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,33 +68,89 @@ public class TopicsSpeakingActivity extends AppCompatActivity {
         adapter = new TopicSpeakingAdapter(topicSpeakingList,this::startExerciseActivity);
         topicsRecyclerView.setAdapter(adapter);
 
-        mDatabase.child(level).child("topics").addValueEventListener(new ValueEventListener() {
+        loadTopicsAndProgress();
+    }
+
+    private void loadTopicsAndProgress() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Tham chiếu đến đường dẫn topics
+        DatabaseReference topicsRef = mDatabase.child(level).child("topics");
+
+        // Tham chiếu đến đường dẫn progress của user
+        DatabaseReference userProgressRef = FirebaseDatabase.getInstance().getReference("users")
+                .child(userId)
+                .child("progress")
+                .child("speaking")
+                .child(level)
+                .child("topics");
+
+        // Đầu tiên, lấy thông tin về topics
+        topicsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 topicSpeakingList.clear();
+
                 if (dataSnapshot.exists()) {
+                    // Lưu trữ danh sách các topic đã tải để xử lý sau
+                    final List<TopicSpeaking> loadedTopics = new ArrayList<>();
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         TopicSpeaking topicSpeaking = snapshot.getValue(TopicSpeaking.class);
                         if (topicSpeaking != null) {
-                            topicSpeakingList.add(topicSpeaking);
-                            android.util.Log.d("TopicsActivity", "Loaded topic: " + topicSpeaking.title);
+                            // Đặt giá trị mặc định cho progress là 0
+                            topicSpeaking.setProgress(0);
+                            loadedTopics.add(topicSpeaking);
                         }
                     }
-                    adapter.notifyDataSetChanged();
-                    if (topicSpeakingList.isEmpty()) {
-                        Toast.makeText(TopicsSpeakingActivity.this, "No topics found for " + level, Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(TopicsSpeakingActivity.this, "No data available for " + level, Toast.LENGTH_LONG).show();
+
+                    // Sau đó, tải progress của user
+                    userProgressRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot progressSnapshot) {
+                            // Thêm tất cả topic vào danh sách
+                            topicSpeakingList.addAll(loadedTopics);
+
+                            // Áp dụng progress cho từng topic nếu có
+                            for (TopicSpeaking topic : topicSpeakingList) {
+                                // +1 vì mảng trong Firebase bắt đầu từ 0
+                                // nhưng id của topic có thể bắt đầu từ 1
+                                DataSnapshot topicProgress = progressSnapshot.child(String.valueOf(topic.getId()));
+
+                                if (topicProgress.exists() && topicProgress.getValue() != null) {
+                                    try {
+                                        Long progressValue = topicProgress.getValue(Long.class);
+                                        if (progressValue != null) {
+                                            topic.setProgress(progressValue.intValue());
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e("TopicsSpeakingActivity", "Error converting progress", e);
+                                    }
+                                }
+                            }
+
+                            // Cập nhật giao diện
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(TopicsSpeakingActivity.this,
+                                    "Error loading progress",
+                                    Toast.LENGTH_SHORT).show();
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(TopicsSpeakingActivity.this, "Error loading topics: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(TopicsSpeakingActivity.this,
+                        "Error loading topics",
+                        Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void startExerciseActivity(TopicSpeaking topicSpeaking) {

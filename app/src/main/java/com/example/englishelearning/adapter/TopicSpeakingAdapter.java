@@ -35,6 +35,10 @@ public class TopicSpeakingAdapter extends RecyclerView.Adapter<TopicSpeakingAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TopicSpeaking topicSpeaking = topicSpeakings.get(position);
         holder.topicTitle.setText(topicSpeaking.title);
+
+        int progressValue = topicSpeaking.getProgress();
+        holder.topicProgress.setText("Progress: " + progressValue + "%");
+
         holder.itemView.setOnClickListener(v -> listener.onTopicClick(topicSpeaking));
     }
 
@@ -45,10 +49,12 @@ public class TopicSpeakingAdapter extends RecyclerView.Adapter<TopicSpeakingAdap
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView topicTitle;
+        TextView topicProgress;
 
         ViewHolder(View itemView) {
             super(itemView);
             topicTitle = itemView.findViewById(R.id.topicTitle);
+            topicProgress = itemView.findViewById(R.id.topicProgress);
         }
     }
     public interface OnTopicClickListener {
