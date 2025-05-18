@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class VocabularyLevelActivity extends AppCompatActivity implements OnTopi
     private VocabularyLevelAdapter adapter;
     private DatabaseReference databaseRef;
     private ImageView btnBack;
+    private MaterialButton btnViewScoreHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,16 @@ public class VocabularyLevelActivity extends AppCompatActivity implements OnTopi
 
         recyclerView = findViewById(R.id.levelRecyclerView);
         btnBack = findViewById(R.id.btn_back);
+        btnViewScoreHistory = findViewById(R.id.btn_view_score_history);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new VocabularyLevelAdapter(this);
         recyclerView.setAdapter(adapter);
 
         btnBack.setOnClickListener(v -> finish());
+        btnViewScoreHistory.setOnClickListener(v -> {
+            startActivity(new android.content.Intent(this, GameHistoryActivity.class));
+        });
         loadLevelsFromFirebase();
     }
 

@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,8 @@ public class VocabularyWordCardActivity extends AppCompatActivity implements Voc
     private VocabularyWordCardAdapter adapter;
     private VocabularyTopic topic;
     private int initialPosition;
+    private TextView tvCardPosition;
+    private Button btnNextCard;
     
     private TextToSpeech ttsUK;
     private TextToSpeech ttsUS;
@@ -86,7 +90,6 @@ public class VocabularyWordCardActivity extends AppCompatActivity implements Voc
     }
 
     private void setupTextToSpeech() {
-        // Initialize UK TTS
         ttsUK = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = ttsUK.setLanguage(Locale.UK);
@@ -99,8 +102,6 @@ public class VocabularyWordCardActivity extends AppCompatActivity implements Voc
                 Toast.makeText(this, "TTS initialization failed", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Initialize US TTS
         ttsUS = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = ttsUS.setLanguage(Locale.US);
@@ -117,12 +118,51 @@ public class VocabularyWordCardActivity extends AppCompatActivity implements Voc
 
     private void setupViews() {
         viewPager = findViewById(R.id.viewPager);
+        tvCardPosition = findViewById(R.id.tv_card_position);
+        btnNextCard = findViewById(R.id.btn_next_card);
+        
+        if (viewPager == null || tvCardPosition == null || btnNextCard == null) {
+            Toast.makeText(this, "Error initializing views", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         adapter = new VocabularyWordCardAdapter(this);
         viewPager.setAdapter(adapter);
 
-        if (topic.getWords() != null) {
+        if (topic != null && topic.getWords() != null) {
             adapter.setWords(topic.getWords());
             viewPager.setCurrentItem(initialPosition, false);
+            updateCardPosition();
+        }
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                updateCardPosition();
+            }
+        });
+
+        btnNextCard.setOnClickListener(v -> {
+            int currentPosition = viewPager.getCurrentItem();
+            if (currentPosition < adapter.getItemCount() - 1) {
+                viewPager.setCurrentItem(currentPosition + 1, true);
+            } else {
+                Toast.makeText(this, "You've reached the last card", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public ViewPager2 getViewPager() {
+        return viewPager;
+    }
+
+    private void updateCardPosition() {
+        if (tvCardPosition != null && viewPager != null && adapter != null) {
+            int currentPosition = viewPager.getCurrentItem() + 1;
+            int totalCards = adapter.getItemCount();
+            tvCardPosition.setText(currentPosition + "/" + totalCards);
         }
     }
 
@@ -154,7 +194,6 @@ public class VocabularyWordCardActivity extends AppCompatActivity implements Voc
     public void onPlayAudio(VocabularyWord word) {
         speakWord(ttsUS, word.getWord());
     }
-
 
     @Override
     protected void onDestroy() {

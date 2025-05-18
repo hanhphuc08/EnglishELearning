@@ -52,8 +52,8 @@ public class VocabularyLevelAdapter extends RecyclerView.Adapter<VocabularyLevel
 
     static class LevelViewHolder extends RecyclerView.ViewHolder {
         private TextView tvLevelName;
-        private TextView tvTopicCount;
         private ImageView ivLevelIcon;
+        private ImageView ivChart;
         private View levelHeader;
         private RecyclerView rvTopics;
         private boolean isExpanded = false;
@@ -61,17 +61,26 @@ public class VocabularyLevelAdapter extends RecyclerView.Adapter<VocabularyLevel
         public LevelViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLevelName = itemView.findViewById(R.id.tv_level_name);
-            tvTopicCount = itemView.findViewById(R.id.tv_topic_count);
             ivLevelIcon = itemView.findViewById(R.id.iv_level_icon);
+            ivChart = itemView.findViewById(R.id.iv_chart);
             levelHeader = itemView.findViewById(R.id.level_header);
             rvTopics = itemView.findViewById(R.id.rv_topics);
         }
 
         public void bind(final VocabularyLevel level, final OnTopicClickListener listener) {
             tvLevelName.setText(level.getLevel());
-            int topicCount = level.getTopics() != null ? level.getTopics().size() : 0;
-            tvTopicCount.setText(topicCount + " topics");
-
+            String levelName = level.getLevel();
+            if (levelName.equalsIgnoreCase("Beginner")) {
+                ivChart.setImageResource(R.drawable.ic_chart_level1);
+            } else if (levelName.equalsIgnoreCase("Intermediate")) {
+                ivChart.setImageResource(R.drawable.ic_chart_level2);
+            } else if (levelName.equalsIgnoreCase("Advanced")) {
+                ivChart.setImageResource(R.drawable.ic_chart_level3);
+            } else if (levelName.equalsIgnoreCase("Professional")) {
+                ivChart.setImageResource(R.drawable.ic_chart_level4);
+            } else {
+                ivChart.setImageResource(R.drawable.ic_chart_level1); // default
+            }
 
             rvTopics.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             VocabularyTopicAdapter topicAdapter = new VocabularyTopicAdapter(listener);
@@ -80,7 +89,6 @@ public class VocabularyLevelAdapter extends RecyclerView.Adapter<VocabularyLevel
             if (level.getTopics() != null) {
                 topicAdapter.setTopics(level.getTopics());
             }
-
 
             levelHeader.setOnClickListener(v -> {
                 isExpanded = !isExpanded;
