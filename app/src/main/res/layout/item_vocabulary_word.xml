@@ -27,7 +27,7 @@
                 android:id="@+id/tv_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#008080"
+                android:textColor="#3C35E4"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -55,7 +55,7 @@
                 android:src="@drawable/ic_audio"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                app:tint="#008080"
+                app:tint="#3C35E4"
                 android:contentDescription="Play audio" />
 
             <ImageButton
@@ -65,7 +65,7 @@
                 android:src="@drawable/ic_copy"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                app:tint="#008080"
+                app:tint="#3C35E4"
                 android:layout_marginStart="8dp"
                 android:contentDescription="Copy word" />
 

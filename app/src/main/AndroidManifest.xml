@@ -42,6 +42,8 @@
             android:exported="false" />
         <activity android:name=".vocabulary.VocabularyWordActivity" />
         <activity android:name=".vocabulary.VocabularyWordCardActivity" />
+        <activity android:name=".vocabulary.VocabularyGameActivity" />
+        <activity android:name=".vocabulary.GameHistoryActivity" />
 
         <activity
             android:name=".MainActivity"

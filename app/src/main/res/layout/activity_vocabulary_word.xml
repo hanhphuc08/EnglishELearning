@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
@@ -34,9 +33,20 @@
             android:textColor="#1A237E"
             android:textSize="22sp"
             android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_play_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play Game"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="8dp"
+            android:backgroundTint="#3C35E4"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp" />
     </LinearLayout>
 
-    <!-- Words RecyclerView -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wordRecyclerView"
         android:layout_width="match_parent"
