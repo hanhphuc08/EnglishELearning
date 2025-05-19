@@ -1,5 +1,7 @@
 package com.example.englishelearning.adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +50,7 @@ public class GrammarQuestionAdapter extends RecyclerView.Adapter<GrammarQuestion
     @Override
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         GrammarQuestion question = questionList.get(position);
-        // Gắn số thứ tự vào passageText
         holder.passageText.setText((position + 1) + ". " + question.getPassage());
-        // Chỉ hiển thị câu hỏi, không có số thứ tự
         holder.questionText.setText(question.getQuestion());
 
         List<String> options = question.getOptions();
@@ -78,6 +78,10 @@ public class GrammarQuestionAdapter extends RecyclerView.Adapter<GrammarQuestion
                     for (RadioButton other : holder.optionButtons) {
                         other.setChecked(other == radio);
                     }
+                    ObjectAnimator.ofObject(radio, "textColor", new ArgbEvaluator(),
+                                    Color.BLACK, ContextCompat.getColor(holder.itemView.getContext(), R.color.teal_200))
+                            .setDuration(300)
+                            .start();
                 }
             });
         }

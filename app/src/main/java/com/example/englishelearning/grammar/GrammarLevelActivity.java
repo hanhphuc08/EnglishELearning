@@ -26,6 +26,7 @@ public class GrammarLevelActivity extends AppCompatActivity {
     private GrammarLevelAdapter adapter;
     private List<GrammarLevel> levelList = new ArrayList<>();
     private DatabaseReference grammarRef;
+    private String topicKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class GrammarLevelActivity extends AppCompatActivity {
         levelRecyclerView = findViewById(R.id.levelRecyclerView);
         levelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        String topicKey = getIntent().getStringExtra("topicKey");
+        topicKey = getIntent().getStringExtra("topicKey");
         if (topicKey == null) {
             Toast.makeText(this, "Error: No topic selected", Toast.LENGTH_SHORT).show();
             finish();
@@ -51,7 +52,7 @@ public class GrammarLevelActivity extends AppCompatActivity {
                 GrammarTopic topic = snapshot.getValue(GrammarTopic.class);
                 if (topic != null && topic.getLevels() != null && !topic.getLevels().isEmpty()) {
                     levelList.addAll(topic.getLevels());
-                    adapter = new GrammarLevelAdapter(levelList, GrammarLevelActivity.this::onLevelClick);
+                    adapter = new GrammarLevelAdapter(levelList, topicKey, GrammarLevelActivity.this::onLevelClick);
                     levelRecyclerView.setAdapter(adapter);
                 } else {
                     Toast.makeText(GrammarLevelActivity.this, "No levels available", Toast.LENGTH_SHORT).show();
@@ -69,7 +70,7 @@ public class GrammarLevelActivity extends AppCompatActivity {
     private void onLevelClick(GrammarLevel level) {
         Intent intent = new Intent(this, GrammarQuestionActivity.class);
         intent.putExtra("level", level.getLevel());
-        intent.putExtra("topicKey", getIntent().getStringExtra("topicKey"));
+        intent.putExtra("topicKey", topicKey);
         startActivity(intent);
     }
 }

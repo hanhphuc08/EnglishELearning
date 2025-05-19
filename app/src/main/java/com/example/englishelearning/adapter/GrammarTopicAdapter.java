@@ -3,6 +3,7 @@ package com.example.englishelearning.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.englishelearning.R;
 import com.example.englishelearning.grammar.GrammarTopic;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -18,7 +25,6 @@ public class GrammarTopicAdapter extends RecyclerView.Adapter<GrammarTopicAdapte
     private final List<GrammarTopic> topicList;
     private final OnTopicClickListener listener;
 
-    // Define interface for topic click
     public interface OnTopicClickListener {
         void onTopicClick(GrammarTopic topic);
     }
@@ -38,21 +44,55 @@ public class GrammarTopicAdapter extends RecyclerView.Adapter<GrammarTopicAdapte
     @Override
     public void onBindViewHolder(@NonNull TopicViewHolder holder, int position) {
         GrammarTopic topic = topicList.get(position);
-        // Lấy tên thì từ key và định dạng lại
         String tenseName = formatTenseName(topic.getKey());
-        holder.title.setText(tenseName); // Hiển thị tên thì (tense name)
+        holder.title.setText(tenseName);
 
-        holder.itemView.setOnClickListener(v -> {
-            listener.onTopicClick(topic); // Gọi listener khi click vào topic
+        // Load progress from Firebase
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference progressRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("progress")
+                .child(topic.getKey());
+
+        progressRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                float totalProgress = 0;
+                int levelCount = topic.getLevels() != null ? topic.getLevels().size() : 0;
+                if (levelCount == 0) {
+                    holder.progressBar.setProgress(0);
+                    holder.progressText.setText("Progress: 0%");
+                    return;
+                }
+
+                for (DataSnapshot levelSnap : snapshot.getChildren()) {
+                    Integer score = levelSnap.child("score").getValue(Integer.class);
+                    Integer totalQuestions = levelSnap.child("total_questions").getValue(Integer.class);
+                    if (score != null && totalQuestions != null && totalQuestions > 0) {
+                        totalProgress += (float) score / totalQuestions * 100;
+                    }
+                }
+
+                int averageProgress = levelCount > 0 ? Math.round(totalProgress / levelCount) : 0;
+                holder.progressBar.setProgress(averageProgress);
+                holder.progressText.setText("Progress: " + averageProgress + "%");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                holder.progressBar.setProgress(0);
+                holder.progressText.setText("Progress: 0%");
+            }
         });
+
+        holder.itemView.setOnClickListener(v -> listener.onTopicClick(topic));
     }
 
-    // Hàm định dạng tên thì (future_continuous -> Future Continuous)
     private String formatTenseName(String key) {
         if (key == null || key.isEmpty()) {
             return "Unknown Tense";
         }
-        // Thay dấu gạch dưới bằng khoảng trắng và viết hoa chữ cái đầu mỗi từ
         String[] words = key.split("_");
         StringBuilder formattedName = new StringBuilder();
         for (String word : words) {
@@ -71,11 +111,14 @@ public class GrammarTopicAdapter extends RecyclerView.Adapter<GrammarTopicAdapte
     }
 
     public static class TopicViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
+        TextView title, progressText;
+        ProgressBar progressBar;
 
         public TopicViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.topicTitle);
+            progressBar = itemView.findViewById(R.id.topicProgressBar);
+            progressText = itemView.findViewById(R.id.topicProgressText);
         }
     }
 }
