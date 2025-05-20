@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,10 +23,12 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -75,6 +78,9 @@ public class GrammarQuestionActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Load temporary progress
+        loadTemporaryProgress(topicKey, level);
 
         grammarRef = FirebaseDatabase.getInstance().getReference("grammar").child(topicKey);
         grammarRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -192,7 +198,13 @@ public class GrammarQuestionActivity extends AppCompatActivity {
     }
 
     private void saveProgressTemporarily() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để lưu tiến độ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = user.getUid();
         DatabaseReference tempProgressRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(userId)
@@ -200,17 +212,92 @@ public class GrammarQuestionActivity extends AppCompatActivity {
                 .child(getIntent().getStringExtra("topicKey"))
                 .child(String.valueOf(getIntent().getIntExtra("level", 1)));
 
+        Map<String, String> stringKeyedAnswers = new HashMap<>();
+        for (Map.Entry<Integer, String> entry : selectedAnswers.entrySet()) {
+            stringKeyedAnswers.put(String.valueOf(entry.getKey()), entry.getValue());
+        }
+
         Map<String, Object> tempProgress = new HashMap<>();
-        tempProgress.put("selected_answers", selectedAnswers);
+        tempProgress.put("selected_answers", stringKeyedAnswers);
         tempProgressRef.setValue(tempProgress).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Đã lưu tạm bài làm", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Đã lưu tạm " + selectedAnswers.size() + " câu trả lời", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Lưu tạm thất bại", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lưu tạm thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void loadTemporaryProgress(String topicKey, int level) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Log.d("GrammarQuestionActivity", "No user logged in, skipping temp progress load");
+            return;
+        }
+
+        String userId = user.getUid();
+        DatabaseReference tempProgressRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("temp_progress")
+                .child(topicKey)
+                .child(String.valueOf(level));
+
+        tempProgressRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    DataSnapshot answersSnapshot = snapshot.child("selected_answers");
+                    try {
+                        // Try to deserialize as Map<String, String>
+                        Map<String, String> savedAnswers = answersSnapshot.getValue(new GenericTypeIndicator<Map<String, String>>() {});
+                        if (savedAnswers != null) {
+                            selectedAnswers.clear();
+                            for (Map.Entry<String, String> entry : savedAnswers.entrySet()) {
+                                try {
+                                    selectedAnswers.put(Integer.parseInt(entry.getKey()), entry.getValue());
+                                } catch (NumberFormatException e) {
+                                    Log.e("GrammarQuestionActivity", "Failed to parse key: " + entry.getKey(), e);
+                                }
+                            }
+                        } else {
+                            // Fallback: Try to deserialize as List<String>
+                            List<String> savedAnswersList = answersSnapshot.getValue(new GenericTypeIndicator<List<String>>() {});
+                            if (savedAnswersList != null) {
+                                selectedAnswers.clear();
+                                for (int i = 0; i < savedAnswersList.size(); i++) {
+                                    if (savedAnswersList.get(i) != null) {
+                                        selectedAnswers.put(i, savedAnswersList.get(i));
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!selectedAnswers.isEmpty() && adapter != null) {
+                            adapter.notifyDataSetChanged();
+                            updateProgressAndIndex();
+                            updateChipSelection(questionViewPager.getCurrentItem());
+                            Toast.makeText(GrammarQuestionActivity.this, "Đã khôi phục " + selectedAnswers.size() + " câu trả lời", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e("GrammarQuestionActivity", "Failed to deserialize temp progress: " + e.getMessage(), e);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("GrammarQuestionActivity", "Failed to load temp progress: " + error.getMessage());
+            }
         });
     }
 
     private void saveProgressToFirebase(int score, int level, String topicKey) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để lưu tiến độ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = user.getUid();
         DatabaseReference progressRef = FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(userId)
@@ -223,8 +310,19 @@ public class GrammarQuestionActivity extends AppCompatActivity {
         progressData.put("total_questions", questionList.size());
         progressData.put("completed", true);
 
-        progressRef.setValue(progressData).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+        progressRef.setValue(progressData).addOnSuccessListener(aVoid -> {
+            // Delete temporary progress after saving final progress
+            DatabaseReference tempProgressRef = FirebaseDatabase.getInstance()
+                    .getReference("users")
+                    .child(userId)
+                    .child("temp_progress")
+                    .child(topicKey)
+                    .child(String.valueOf(level));
+            tempProgressRef.removeValue().addOnFailureListener(e -> {
+                Log.e("GrammarQuestionActivity", "Failed to delete temp progress: " + e.getMessage());
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to save progress: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -232,14 +330,12 @@ public class GrammarQuestionActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Kết quả");
         builder.setMessage("Điểm của bạn: " + score + "/" + questionList.size() + "\nBạn có muốn xem chi tiết?");
-
         builder.setPositiveButton("Xem chi tiết", (dialog, which) -> {
             Intent intent = new Intent(this, ResultDetailActivity.class);
             intent.putExtra("question_list", new ArrayList<>(questionList));
             intent.putExtra("selected_answers", new HashMap<>(selectedAnswers));
             startActivity(intent);
         });
-
         builder.setNegativeButton("Đóng", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
