@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static final String BASE_URL = "https://55b4-2a09-bac5-d46d-16c8-00-245-c2.ngrok-free.app";
+    private static final String BASE_URL = "https://7d90-125-235-232-68.ngrok-free.app";
     private static RasaApi rasaApi;
     public static RasaApi getRasaApi() {
         if (rasaApi == null) {
