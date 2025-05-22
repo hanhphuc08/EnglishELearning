@@ -3,13 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
-    android:clickable="true"
-    android:focusable="true"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,32 +14,27 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/topicTitle"
-            android:layout_width="wrap_content"
+            android:id="@+id/result_question_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Future Continuous"
-            android:textColor="#1A237E"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/black" />
 
-        <ProgressBar
-            android:id="@+id/topicProgressBar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        <TextView
+            android:id="@+id/result_correct_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:max="100"
-            android:progress="0"
-            android:progressTint="@color/teal_200" />
+            android:textSize="14sp"
+            android:textColor="@color/green" />
 
         <TextView
-            android:id="@+id/topicProgressText"
-            android:layout_width="wrap_content"
+            android:id="@+id/result_user_answer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Progress: 0%"
-            android:textColor="#424242"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textColor="@color/red" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
