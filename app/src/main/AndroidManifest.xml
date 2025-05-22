@@ -17,9 +17,15 @@
         android:theme="@style/Theme.EnglishELearning"
         tools:targetApi="31">
         <activity
-            android:name=".speaking.TestSpeakingActivity"
+            android:name=".grammar.ResultDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".grammar.GrammarLevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".grammar.GrammarActivity"
+            android:exported="false" />
+<activity
             android:name=".listening.ResultActivity"
             android:exported="false" />
         <activity
@@ -31,9 +37,9 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
 
@@ -42,6 +48,8 @@
             android:exported="false" />
         <activity android:name=".vocabulary.VocabularyWordActivity" />
         <activity android:name=".vocabulary.VocabularyWordCardActivity" />
+        <activity android:name=".vocabulary.VocabularyGameActivity" />
+        <activity android:name=".vocabulary.GameHistoryActivity" />
 
         <activity
             android:name=".MainActivity"
@@ -59,12 +67,9 @@
             android:name=".listening.ListeningActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".grammar.GrammarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".grammar.GrammarLevelActivity"
-            android:exported="false" />
+
+
+
         <activity
             android:name=".grammar.GrammarQuestionActivity"
             android:exported="false" />

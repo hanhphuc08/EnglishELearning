@@ -20,6 +20,7 @@ import com.example.englishelearning.R;
 import com.example.englishelearning.adapter.VocabularyWordAdapter;
 import com.example.englishelearning.model.VocabularyTopic;
 import com.example.englishelearning.model.VocabularyWord;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
 
@@ -91,7 +92,6 @@ public class VocabularyWordActivity extends AppCompatActivity implements Vocabul
     }
 
     private void setupTextToSpeech() {
-        // Initialize UK TTS
         ttsUK = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = ttsUK.setLanguage(Locale.UK);
@@ -105,7 +105,6 @@ public class VocabularyWordActivity extends AppCompatActivity implements Vocabul
             }
         });
 
-        // Initialize US TTS
         ttsUS = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = ttsUS.setLanguage(Locale.US);
@@ -129,12 +128,17 @@ public class VocabularyWordActivity extends AppCompatActivity implements Vocabul
         if (topic.getWords() != null) {
             adapter.setWords(topic.getWords());
         }
+
+        MaterialButton btnPlayGame = findViewById(R.id.btn_play_game);
+        btnPlayGame.setOnClickListener(v -> {
+            startActivity(VocabularyGameActivity.newIntent(this, topic));
+        });
     }
 
     private void speakWord(TextToSpeech tts, String word) {
         if (tts != null && isTTSReady) {
-            tts.setSpeechRate(0.8f); // Slightly slower speech rate
-            tts.setPitch(1.0f); // Normal pitch
+            tts.setSpeechRate(0.8f);
+            tts.setPitch(1.0f);
             int result = tts.speak(word, TextToSpeech.QUEUE_FLUSH, null, null);
             
             if (result == TextToSpeech.ERROR) {

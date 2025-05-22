@@ -49,18 +49,18 @@ public class VocabularyTopicAdapter extends RecyclerView.Adapter<VocabularyTopic
 
     static class TopicViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTopicName;
-        private TextView tvWordCount;
+
 
         public TopicViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTopicName = itemView.findViewById(R.id.tv_topic_name);
-            tvWordCount = itemView.findViewById(R.id.tv_word_count);
+
         }
 
         public void bind(final VocabularyTopic topic, final OnTopicClickListener listener) {
             tvTopicName.setText(topic.getTopic());
-            int wordCount = topic.getWords() != null ? topic.getWords().size() : 0;
-            tvWordCount.setText(wordCount + " words");
+
+
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

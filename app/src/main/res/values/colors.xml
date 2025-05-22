@@ -8,4 +8,7 @@
     <color name="purple_700">#3700B3</color>
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
+    <color name="primary">#3C35E4</color>
+    <color name="correct_answer">#4CAF50</color>
+    <color name="error">#F44336</color>
 </resources>

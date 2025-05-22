@@ -17,7 +17,7 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Icon for the topic -->
+
         <ImageView
             android:id="@+id/topicIcon"
             android:layout_width="40dp"
@@ -51,7 +51,7 @@
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Arrow to indicate clickable item -->
+
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
