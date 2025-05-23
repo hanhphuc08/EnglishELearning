@@ -6,37 +6,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:background="?attr/colorSurfaceContainerLowest"
     tools:context=".speaking.TopicsSpeakingActivity">
 
+    <!-- Header tùy chỉnh -->
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:background="?attr/colorSurface"> <!-- Thêm màu nền cho header nếu muốn -->
 
         <ImageView
             android:id="@+id/backButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_back"
-            android:contentDescription="Back" />
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            app:tint="?attr/colorControlNormal" />
 
         <TextView
             android:id="@+id/topicsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Topics for Level A1"
-            android:textColor="#000000"
-            android:textSize="20sp"
+            tools:text="Topics for Level A1"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textColor="?attr/colorOnSurface"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <!-- Divider (tùy chọn, để tách biệt header và nội dung) -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant"
+        android:visibility="gone"/> <!-- Để visible nếu muốn hiển thị divider -->
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/topicsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_topic"
+        tools:itemCount="5" />
 
 </LinearLayout>

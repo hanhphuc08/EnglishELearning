@@ -22,8 +22,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.englishelearning.R;
+import com.example.englishelearning.adapter.KeyPhraseAdapter;
 import com.example.englishelearning.model.TopicSpeaking;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,16 +39,16 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class TestSpeakingActivity extends AppCompatActivity {
-    private LinearLayout keyPhraseContainer;
     private ArrayList<String> keyPhrases;
     private TextToSpeech textToSpeech;
     private int currentIndex = 0;
-    private ArrayList<View> phraseViews = new ArrayList<>();
     private ActivityResultLauncher<Intent> speechRecognizerLauncher;
     private ArrayList<Boolean> isCorrectList = new ArrayList<>();
     private Button finishTestButton;
     private String level;
     private TopicSpeaking topicSpeaking;
+    private ViewPager2 phrasesViewPager;
+    private KeyPhraseAdapter keyPhraseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,8 @@ public class TestSpeakingActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        keyPhraseContainer = findViewById(R.id.keyPhraseContainer);
+
+        phrasesViewPager = findViewById(R.id.phrasesViewPager);
 
         keyPhrases = getIntent().getStringArrayListExtra("KEY_PHRASES");
         level = getIntent().getStringExtra("LEVEL");
@@ -92,7 +95,22 @@ public class TestSpeakingActivity extends AppCompatActivity {
                 }
         );
 
-        populateKeyPhrases();
+        keyPhraseAdapter = new KeyPhraseAdapter(keyPhrases, this::speakPhrase, this::startSpeechRecordingForItem);
+        phrasesViewPager.setAdapter(keyPhraseAdapter);
+
+        // Xử lý khi chuyển trang ViewPager2
+        phrasesViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                currentIndex = position; // Cập nhật currentIndex
+                if (position == keyPhrases.size() - 1) {
+                    finishTestButton.setVisibility(View.VISIBLE);
+                } else {
+                    finishTestButton.setVisibility(View.GONE);
+                }
+            }
+        });
 
         finishTestButton = findViewById(R.id.finishTestButton);
         finishTestButton.setOnClickListener(v -> {
@@ -117,27 +135,12 @@ public class TestSpeakingActivity extends AppCompatActivity {
         });
     }
 
-    private void populateKeyPhrases() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        for (String phrase : keyPhrases) {
-            View itemView = inflater.inflate(R.layout.item_key_phrase, keyPhraseContainer, false);
-
-            TextView phraseTextView = itemView.findViewById(R.id.phraseTextView);
-            ImageButton playButton = itemView.findViewById(R.id.playButton);
-            ImageButton recordButton = itemView.findViewById(R.id.recordButton);
-
-            phraseTextView.setText(phrase);
-
-            playButton.setOnClickListener(v -> speakPhrase(phrase));
-
-            recordButton.setOnClickListener(v -> {
-                currentIndex = phraseViews.indexOf(itemView);
-                startSpeechRecognizer();
-            });
-
-            phraseViews.add(itemView);
-            keyPhraseContainer.addView(itemView);
+    private void startSpeechRecordingForItem(int position) {
+        // currentIndex đã được cập nhật bởi onPageSelected của ViewPager2
+        // Hoặc có thể truyền trực tiếp position vào đây
+        // currentIndex = position; // Đảm bảo currentIndex là đúng trước khi gọi startSpeechRecognizer
+        if (phrasesViewPager.getCurrentItem() == position) { // Chỉ xử lý nếu là item hiện tại
+            startSpeechRecognizer(); // Hàm này vẫn dùng currentIndex nội bộ
         }
     }
 
@@ -227,15 +230,13 @@ public class TestSpeakingActivity extends AppCompatActivity {
         String expected = keyPhrases.get(currentIndex);
         int similarity = calculateSimilarity(expected, userSpeech);
 
-        View currentView = phraseViews.get(currentIndex);
-
         if (similarity >= 80) { // Đúng từ 80% trở lên
-            currentView.setBackgroundColor(Color.parseColor("#C8E6C9")); // Xanh lá nhạt
+            keyPhraseAdapter.updateItemStatus(currentIndex, true); // true là đúng
             Toast.makeText(this, "Good job! Similarity: " + similarity + "%", Toast.LENGTH_SHORT).show();
             isCorrectList.set(currentIndex, true);
 
         } else {
-            currentView.setBackgroundColor(Color.parseColor("#FFCDD2")); // Đỏ nhạt
+            keyPhraseAdapter.updateItemStatus(currentIndex, false); // false là sai
             Toast.makeText(this, "Try again! Similarity: " + similarity + "%", Toast.LENGTH_SHORT).show();
         }
     }

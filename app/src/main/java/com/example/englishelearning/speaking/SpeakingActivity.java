@@ -63,19 +63,19 @@ public class SpeakingActivity extends AppCompatActivity {
                 if (snapshot.child("A2").child("levelProgress").exists()) {
                     int a2Progress = snapshot.child("A2").child("levelProgress").getValue(Integer.class);
                     progressA2Card.setText("Progress: " + a2Progress + "%");
-                    progressA2.setText("A1: " + a2Progress + "%" );
+                    progressA2.setText("A2: " + a2Progress + "%" );
                 }
 
                 if (snapshot.child("B1").child("levelProgress").exists()) {
                     int b1Progress = snapshot.child("B1").child("levelProgress").getValue(Integer.class);
                     progressB1Card.setText("Progress: " + b1Progress + "%");
-                    progressB1.setText("A1: " + b1Progress + "%" );
+                    progressB1.setText("B1: " + b1Progress + "%" );
                 }
 
                 if (snapshot.child("B2").child("levelProgress").exists()) {
                     int b2Progress = snapshot.child("B2").child("levelProgress").getValue(Integer.class);
                     progressB2Card.setText("Progress: " + b2Progress + "%");
-                    progressB2.setText("A1: " + b2Progress + "%" );
+                    progressB2.setText("B2: " + b2Progress + "%" );
 
                 }
             }

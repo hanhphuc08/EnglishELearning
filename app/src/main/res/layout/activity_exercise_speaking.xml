@@ -5,34 +5,42 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExerciseSpeakingActivity">
+    android:background="?android:colorBackground"  tools:context=".speaking.ExerciseSpeakingActivity">
 
+    <!-- Thanh Header -->
     <ImageView
         android:id="@+id/backButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Back"
-        android:padding="12dp"
+        android:padding="10dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <!-- Gợi ý: Thêm background="?attr/selectableItemBackgroundBorderless" cho hiệu ứng chạm -->
+    <!-- Gợi ý: Giảm padding một chút nếu icon đã có khoảng trống -->
 
     <TextView
         android:id="@+id/topicTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:textSize="20sp"
+        android:gravity="center_vertical|start"
+        android:text="Speaking Topic"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backButton"
-        app:layout_constraintTop_toTopOf="@+id/backButton"
-        app:layout_constraintBottom_toBottomOf="@+id/backButton"
-        tools:text="Speaking Topic" />
+        app:layout_constraintTop_toTopOf="@+id/backButton" />
+    <!-- Gợi ý: Sử dụngtextAppearance cho styling nhất quán -->
+    <!-- Gợi ý: Thay đổi gravity thành start nếu muốn tiêu đề căn trái -->
 
+    <!-- Khu vực Video -->
     <FrameLayout
         android:id="@+id/videoContainer"
         android:layout_width="0dp"
@@ -42,7 +50,9 @@
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topicTitle">
+        app:layout_constraintTop_toBottomOf="@+id/backButton">
+        <!-- Gợi ý: Có thể thêm hiệu ứng bo góc cho videoContainer bằng cách tạo drawable background -->
+        <!-- android:background="@drawable/rounded_corners_black_bg" -->
 
         <VideoView
             android:id="@+id/videoView"
@@ -59,52 +69,82 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <Button
-        android:id="@+id/playButton"
-        android:layout_width="wrap_content"
+    <!-- Thanh Điều Khiển Video và Transcript Toggle -->
+    <LinearLayout
+        android:id="@+id/videoControlsLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Play"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/videoContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/videoContainer" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/showTranscriptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Show Transcript"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playButton" />
+        <Button
+            android:id="@+id/playButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            app:icon="@drawable/ic_play_arrow" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/showTranscriptButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transcript"
+            app:icon="@drawable/ic_transcript" />
+    </LinearLayout>
+
+
+    <!-- Khu vực Transcript (có thể cuộn) -->
     <ScrollView
+        android:id="@+id/transcriptScrollViewContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/testButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showTranscriptButton">
+        app:layout_constraintTop_toBottomOf="@+id/videoControlsLayout">
 
         <TextView
             android:id="@+id/transcriptText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:lineSpacingExtra="4dp"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:visibility="gone"
-            tools:text="Transcript goes here..." />
+            tools:text="Transcript goes here... spanning multiple lines to show how it would look and how the scroll view would behave. This text should be long enough to demonstrate scrolling capabilities if the content exceeds the available space."
+            tools:visibility="visible" />
+
     </ScrollView>
 
     <Button
         android:id="@+id/testButton"
+        style="?attr/materialButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:text="Take the test"
-        android:textSize="16sp"
+        android:textAppearance="?attr/textAppearanceButton"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
