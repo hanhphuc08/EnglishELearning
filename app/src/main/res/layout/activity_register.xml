@@ -24,14 +24,17 @@
         android:layout_gravity="center_horizontal"
         android:padding="24dp">
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/LoginText"
-            android:textAlignment="center"
-            android:textSize="36dp"
-            android:textStyle="bold"
-            android:textColor="#9C27B0"/>
+            android:layout_height="50dp"
+            android:id="@+id/nameEditText"
+            android:background="@drawable/custom_edittext"
+            android:drawablePadding="8dp"
+            android:hint="Full Name"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:layout_marginTop="180dp"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -43,13 +46,13 @@
             android:padding="10dp"
             android:textColor="@color/black"
             android:textColorHighlight="@color/cardview_dark_background"
-            android:layout_marginTop="100dp"/>
+            android:layout_marginTop="20dp"/>
 
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_edittext"
             android:drawablePadding="8dp"
             android:hint="Password"
@@ -58,11 +61,24 @@
             android:textColor="@color/black"
             android:textColorHighlight="@color/cardview_dark_background" />
 
+        <EditText
+            android:id="@+id/confirmPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_edittext"
+            android:drawablePadding="8dp"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/cardview_dark_background" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:id="@+id/loginButton"
-            android:text="Login"
+            android:id="@+id/registerButton"
+            android:text="Register"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginTop="30dp"
@@ -71,14 +87,14 @@
             app:cornerRadius="20dp"/>
 
         <TextView
-            android:id="@+id/registerLink"
+            android:id="@+id/loginLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Don't have an account? Register"
+            android:text="Already have an account? Login"
             android:textColor="#2196F3"/>
 
     </LinearLayout>
 
-</LinearLayout>
+</LinearLayout> 

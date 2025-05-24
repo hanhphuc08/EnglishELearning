@@ -11,7 +11,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Account Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +20,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Profile Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +70,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- App Settings Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +79,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Settings Options -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +93,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Selected Languages -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,7 +124,6 @@
                     android:layout_height="1dp"
                     android:background="#E0E0E0"/>
 
-                <!-- Notifications -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -161,7 +155,6 @@
                     android:layout_height="1dp"
                     android:background="#E0E0E0"/>
 
-                <!-- Theme -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -190,7 +183,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- About App Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -204,7 +196,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
@@ -215,7 +207,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Give feedback -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -247,7 +238,6 @@
                     android:layout_height="1dp"
                     android:background="#E0E0E0"/>
 
-                <!-- About -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -275,8 +265,6 @@
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
-        <!-- Version -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -285,6 +273,15 @@
             android:textSize="14sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"/>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:backgroundTint="@color/design_default_color_error"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="24dp"
+            app:cornerRadius="8dp"/>
 
     </LinearLayout>
 </ScrollView> 
