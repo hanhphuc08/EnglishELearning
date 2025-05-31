@@ -64,5 +64,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.10.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation ("com.loopj.android:android-async-http:1.4.11")
+    implementation ("androidx.cardview:cardview:1.0.0")
 
 }

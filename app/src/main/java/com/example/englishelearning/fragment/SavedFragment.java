@@ -50,12 +50,10 @@ public class SavedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_savedai, container, false);
 
-        // Chỉ tạo senderId mới nếu chưa có
         if (senderId == null) {
             senderId = "user_" + System.currentTimeMillis();
         }
 
-        // Khởi tạo danh sách gợi ý chính tả
         spellCheckMap = new HashMap<>();
         spellCheckMap.put("hii", "Hi");
         spellCheckMap.put("helo", "Hello");
@@ -101,16 +99,14 @@ public class SavedFragment extends Fragment {
         spellCheckMap.put("stopovers", "Stopover");
         spellCheckMap.put("hobby", "Hobby");
 
-        // Khởi tạo RecyclerView
+
         conversationAdapter = new ConversationAdapter();
         RecyclerView rvConversation = view.findViewById(R.id.rv_conversation);
         rvConversation.setAdapter(conversationAdapter);
         rvConversation.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Khởi tạo EditText
         etMessage = view.findViewById(R.id.et_message);
 
-        // Khởi tạo TextToSpeech
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -124,7 +120,7 @@ public class SavedFragment extends Fragment {
             }
         });
 
-        // Khởi tạo SpeechRecognizer
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getContext());
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
@@ -201,7 +197,7 @@ public class SavedFragment extends Fragment {
             public void onPartialResults(Bundle partialResults) {}
         });
 
-        // Nút gửi tin nhắn
+
         MaterialButton btnSend = view.findViewById(R.id.btn_send);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +211,6 @@ public class SavedFragment extends Fragment {
             }
         });
 
-        // Nút ghi âm
         MaterialButton btnRecord = view.findViewById(R.id.btn_record);
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +241,7 @@ public class SavedFragment extends Fragment {
             }
         });
 
-        // Yêu cầu quyền RECORD_AUDIO
+
         ActivityCompat.requestPermissions(
                 requireActivity(),
                 new String[]{android.Manifest.permission.RECORD_AUDIO},
@@ -271,12 +266,11 @@ public class SavedFragment extends Fragment {
     }
 
     private void callRasaApi(String userInput) {
-        // Tách câu thành các từ
+
         String[] words = userInput.toLowerCase().split("\\s+");
         StringBuilder correctedInput = new StringBuilder();
         boolean hasCorrection = false;
 
-        // Kiểm tra từng từ với spellCheckMap
         for (String word : words) {
             String suggestion = spellCheckMap.get(word);
             if (suggestion != null) {
@@ -290,7 +284,7 @@ public class SavedFragment extends Fragment {
             }
         }
 
-        // Loại bỏ khoảng trắng thừa và gửi câu đã sửa đến Rasa
+
         String finalInput = correctedInput.toString().trim();
 
         RasaRequest request = new RasaRequest(senderId, finalInput);

@@ -7,11 +7,11 @@
     <item
         android:id="@+id/navigation_bookmark"
         android:icon="@drawable/ic_bookmark"
-        android:title="Saved" />
+        android:title="Chat" />
     <item
         android:id="@+id/navigation_play"
         android:icon="@drawable/ic_play"
-        android:title="Practice" />
+        android:title="Search" />
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_profile"
